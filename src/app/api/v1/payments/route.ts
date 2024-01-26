@@ -3,6 +3,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 
 export async function GET(req: NextRequest) {
   const id = req.nextUrl.searchParams.get('id')
+  if (!id) {
+    return NextResponse.json(`Preconditions`, { status: 422 })
+  }
+
   try {
     const resp = await api.get(`payments/${id}/status`)
     const headerDate =
@@ -10,7 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(resp.data, { status: 200 })
   } catch (err) {
     const error = err as Error
-    return NextResponse.json(error.message, { status: 401 })
+    return NextResponse.json(error.message, { status: 500 })
   }
 }
 

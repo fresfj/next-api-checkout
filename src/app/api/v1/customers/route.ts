@@ -2,6 +2,10 @@ import { NextResponse, type NextRequest } from 'next/server'
 import api from '@/app/utils/api'
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
+  if (searchParams) {
+    return NextResponse.json(`Preconditions`, { status: 422 })
+  }
+
   try {
     const resp = await api.get('customers', { params: searchParams })
     const headerDate =
@@ -13,7 +17,7 @@ export async function GET(req: NextRequest) {
     }
   } catch (err) {
     const error = err as Error
-    return NextResponse.json(error.message, { status: 401 })
+    return NextResponse.json(error.message, { status: 500 })
   }
 }
 
@@ -26,6 +30,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(resp.data, { status: 201 })
   } catch (err) {
     const error = err as Error
-    return NextResponse.json(error.message, { status: 401 })
+    return NextResponse.json(error.message, { status: 500 })
   }
 }

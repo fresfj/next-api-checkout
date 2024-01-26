@@ -1,5 +1,5 @@
 import axios from 'axios'
-const access_token = `$aact_${process.env.TOKEN_ASAAS}==`
+const access_token = `$aact_${process.env.NEXT_PUBLIC_TOKEN_ASAAS}==`
 const baseURL = process.env.NEXT_PUBLIC_API_URL,
   isServer = typeof window === 'undefined'
 
