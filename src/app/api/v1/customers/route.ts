@@ -1,9 +1,7 @@
-import axios from 'axios'
 import { NextResponse, type NextRequest } from 'next/server'
 import api from '@/app/utils/api'
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
-
   try {
     const resp = await api.get('customers', { params: searchParams })
     const headerDate =
@@ -13,20 +11,21 @@ export async function GET(req: NextRequest) {
     } else {
       return NextResponse.json('not found', { status: 404 })
     }
-  } catch (err: any) {
-    return NextResponse.json(err?.message, { status: 500 })
+  } catch (err) {
+    const error = err as Error
+    return NextResponse.json(error.message, { status: 401 })
   }
 }
 
 export async function POST(req: NextRequest) {
   const data = await req.json()
-
   try {
     const resp = await api.post('customers', data)
     const headerDate =
       resp.headers && resp.headers.date ? resp.headers.date : 'no response date'
     return NextResponse.json(resp.data, { status: 201 })
-  } catch (err: any) {
-    return NextResponse.json(err?.message, { status: 500 })
+  } catch (err) {
+    const error = err as Error
+    return NextResponse.json(error.message, { status: 401 })
   }
 }
