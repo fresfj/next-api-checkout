@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from 'next/server'
 import api from '@/app/utils/api'
 export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams
-  if (searchParams) {
+  if (searchParams === null) {
     return NextResponse.json(`Preconditions`, { status: 422 })
   }
 
