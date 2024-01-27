@@ -6,6 +6,10 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
 
+    if( data.event === "TRANSFER_CREATED") {
+      //  atualizar tabela de transfer usuario
+    }
+
     if (data.event === "PAYMENT_RECEIVED" && data.payment?.billingType === 'PIX') {     
       const indicationsQuery = await db.collection('indications').where('payment.id', '==', data.payment.id).get();
       
@@ -17,7 +21,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    return NextResponse.json('Efetuado com sucesso', { status: 200 })
+    return NextResponse.json('Efetuado com sucesso', { status: 201 })
   } catch (err) {
     const error = err as Error
     return NextResponse.json(error.message, { status: 500 })

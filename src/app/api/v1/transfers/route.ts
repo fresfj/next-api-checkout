@@ -1,11 +1,18 @@
+import api from "@/app/utils/api"
+import { db } from "@/app/utils/data/firebase-admin-config"
 import {type NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
   const data = await req.json()
-  try {
-    return NextResponse.json('olá', {  status: 200 })
+  try { 
+
+    const response = await api.post('transfers', data)
+     
+    return NextResponse.json(response.data , {  status: 201 })
   } catch (err) {
-    const error = err as Error
-    return NextResponse.json(error.message, { status: 500 })
+    const error = err as any
+    return NextResponse.json(error.response.data.errors[0].description, {
+      status: error.response.status
+    })
   }
 }
