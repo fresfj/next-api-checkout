@@ -1,4 +1,5 @@
-import { initializeApp, getApps, cert } from 'firebase-admin/app'
+import { initializeApp, getApps, cert ,} from 'firebase-admin/app'
+import { getFirestore } from 'firebase-admin/firestore';
 const serviceAccount = require('./85e75920eb.json')
 const firebaseAdminConfig = {
   credential: cert(serviceAccount),
@@ -10,3 +11,8 @@ export function customInitApp() {
     initializeApp(firebaseAdminConfig)
   }
 }
+
+
+const db = getFirestore();
+
+export { db }
