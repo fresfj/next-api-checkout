@@ -12,6 +12,7 @@ export function customInitApp() {
   }
 }
 
+customInitApp()
 
 const db = getFirestore();
 
