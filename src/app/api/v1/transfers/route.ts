@@ -6,7 +6,7 @@ import {type NextRequest, NextResponse } from "next/server"
 export async function POST(req: NextRequest) {
   const data = await req.json()
   try { 
-  console.log('try',data)
+  
     const response = await api.post('transfers', data)
 
     db.collection('indications').doc(data.indicationId).update({
