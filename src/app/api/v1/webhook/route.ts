@@ -11,14 +11,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (data.event === "PAYMENT_RECEIVED" && data.payment?.billingType === 'PIX') {     
-      const indicationsQuery = await db.collection('indications').where('payment.id', '==', data.payment.id).get();
+      // const indicationsQuery = await db.collection('indications').where('payment.id', '==', data.payment.id).get();
       
-      indicationsQuery.docs.map(async (indicationDoc) => {
-        await db.collection('indications').doc(indicationDoc.id).update({
-          payment: data.payment,
-          status: true
-        })
-      });
+      // indicationsQuery.docs.map(async (indicationDoc) => {
+      //   await db.collection('indications').doc(indicationDoc.id).update({
+      //     payment: data.payment,
+      //     status: true
+      //   })
+      // });
     }
 
     return NextResponse.json('Efetuado com sucesso', { status: 201 })
