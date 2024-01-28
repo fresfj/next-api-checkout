@@ -4,32 +4,53 @@ import { db } from "@/app/utils/data/firebase-admin-config";
 import {type NextRequest, NextResponse } from "next/server"
 
 export async function POST(req: NextRequest) {
-  const data = await req.json()
   try { 
-   
-      await api.post('transfers', data)
-        .then(async response => {         
-           
-          await db.collection('users').doc(data.userId).collection('transfers').add(response.data());
+    const {    
+      bankAccount,
+      description,
+      operationType,
+      pixAddressKey,
+      pixAddressKeyType,
+      scheduleDate,
+      value,
+      indicationId,
+      userId    
+    } = await req.json()
 
-        })
-        .catch((err) => {
-          const error = err as any
-          return NextResponse.json(error.response.data.errors[0].description, {
-            status: error.response.status
-          })
-        })
-        
-        await db.collection('indications').doc(data.indicationId).update({
-          redeem: true,
-          redeemAt: new Date()
-        })
-  
+    const dataSend = {
+      description,
+      operationType,
+      scheduleDate,
+      value,
+      ...(operationType === 'PIX' ? {pixAddressKey, pixAddressKeyType} : {bankAccount})    }
+    
+    
+    const response = await api.post('transfers', dataSend) 
  
+              
+    const transfer = await db.collection('users').doc(userId).collection('transfers').add(response.data);
 
+  
+    await db.collection('indications').doc(indicationId).update({
+      redeemId: transfer.id,
+      redeem: true,
+      redeemAt: new Date()
+    })
+
+    
     return NextResponse.json('Tranferência pedida com sucesso' , {  status: 201 })
   } catch (err) {
     const error = err as any
-    return NextResponse.json(error.message, {status: 500})
+   
+    if(error.response.data.errors) {
+      return NextResponse.json(error.response.data.errors[0].description, {
+        status: error.response.status
+      })
+    }
+
+    return NextResponse.json(error.message || 'Erro durante a transferência.', {
+      status: error.status || 500,
+    });
+    
   }
 }
