@@ -18,8 +18,10 @@ export async function GET(req: NextRequest) {
       return NextResponse.json('not found', { status: 404 })
     }
   } catch (err) {
-    const error = err as Error
-    return NextResponse.json(error.message, { status: 500 })
+    const error = err as any
+    return NextResponse.json(error.response.data.errors[0].description, {
+      status: error.response.status
+    })
   }
 }
 
@@ -33,7 +35,9 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(resp.data, { status: 201 })
   } catch (err) {
-    const error = err as Error
-    return NextResponse.json(error.message, { status: 500 })
+    const error = err as any
+    return NextResponse.json(error.response.data.errors[0].description, {
+      status: error.response.status
+    })
   }
 }
